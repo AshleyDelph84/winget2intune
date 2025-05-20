@@ -66,5 +66,5 @@
 
 **IX. Packaging & Distribution**
 - [x] Create a `README.md` for the project with setup and usage instructions.
-- [ ] Test the application thoroughly on a target OS.
-- [ ] Consider packaging the Python application into an executable (e.g., using PyInstaller or Nuitka) for easier distribution. 
+- [x] Test the application thoroughly on a target OS.
+- [x] Consider packaging the Python application into an executable (e.g., using PyInstaller or Nuitka) for easier distribution. 

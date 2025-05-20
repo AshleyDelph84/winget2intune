@@ -195,14 +195,24 @@ class MainWindow(QMainWindow):
 
                 if len(parts) >= 2: # We need at least ID and Version
                     app_id = parts[0].strip()
-                    version = parts[1].strip()
+                    raw_version = parts[1].strip()
+                    
+                    # Clean up the version string: remove any " Tag: ..." suffix
+                    tag_suffix_index = raw_version.find(" Tag: ")
+                    if tag_suffix_index != -1:
+                        version = raw_version[:tag_suffix_index].strip()
+                    else:
+                        version = raw_version
+
                     if len(parts) >= 4: # Name, Id, Version, Match, Source
                         # If "Match" column is present, Source is the 4th element from remaining_part split
                         source = parts[3].strip() 
                     elif len(parts) == 3: # Name, Id, Version, Source (No "Match" column)
                         source = parts[2].strip()
-                    else: # Only ID and Version found reliably from parts
-                        source = "N/A" # Or try to infer, but safer to mark as N/A
+                    else: # Only ID and Version found reliably from parts (and Match might be the 3rd part if it exists without source)
+                        # This case means we have ID and Version, but Source might be missing or part of a 3rd unexpected column.
+                        # If parts has only 2 elements (ID, Version), source will be N/A
+                        source = "N/A" 
                     
                     if name and app_id: # Ensure essential fields are present
                          apps.append({"Name": name, "ID": app_id, "Version": version, "Source": source})
