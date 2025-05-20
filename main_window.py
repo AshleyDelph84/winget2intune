@@ -21,8 +21,18 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QAbstractItemView # Added for table view options
 )
-from PySide6.QtGui import QStandardItemModel, QStandardItem # Added for table model
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QIcon
 from PySide6.QtCore import Qt, QSettings
+
+# Helper function to get correct path for bundled resources
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -30,6 +40,17 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Winget2Intunewin GUI Packer")
         self.setGeometry(100, 100, 900, 700) # Adjusted size for better layout
+
+        # Set Application Window Icon
+        try:
+            icon_path = resource_path("assets/logo.png")
+            if os.path.exists(icon_path):
+                self.setWindowIcon(QIcon(icon_path))
+            else:
+                # This print might not be visible in a bundled app without console
+                print(f"Warning: Window Icon file not found at {icon_path}. Using default icon.")
+        except Exception as e:
+            print(f"Error setting window icon: {e}")
 
         self.selected_app_data = None # To store data of the selected app
         self.current_temp_dir = None # To store the path of the current temporary directory
